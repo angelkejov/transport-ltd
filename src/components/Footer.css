@@ -1,0 +1,43 @@
+.footer {
+  width: 100%;
+  background: linear-gradient(90deg, #d32f2f 60%, #ffd600 100%);
+  color: #fff;
+  padding: 0;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  box-shadow: 0 -4px 24px rgba(0,0,0,0.10);
+  z-index: 100;
+  border-top: 4px solid #388e3c;
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.08rem;
+  font-weight: 500;
+  padding: 1.2rem 0.5rem 1.2rem 0.5rem;
+  background: rgba(255,255,255,0.04);
+  border-radius: 0 0 18px 18px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.footer-content span {
+  transition: color 0.2s, text-shadow 0.2s;
+}
+
+.footer-content span:hover {
+  color: #222;
+  text-shadow: 0 1px 8px #ffd60099;
+}
+
+@media (min-width: 600px) {
+  .footer-content {
+    flex-direction: row;
+    justify-content: center;
+    gap: 2.5rem;
+    font-size: 1.12rem;
+  }
+} 
