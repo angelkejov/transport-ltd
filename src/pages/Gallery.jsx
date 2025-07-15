@@ -4,7 +4,7 @@ import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 
 // Helper to get the correct media URL
-const BACKEND_URL = process.env.REACT_APP_API_URL?.replace(/\/api$/, '') || 'http://localhost:5000';
+const BACKEND_URL = process.env.REACT_APP_API_URL?.replace(/\/api$/, '') || window.location.origin;
 const getMediaUrl = (url) => {
   if (url.startsWith('/uploads/')) {
     return `${BACKEND_URL}${url}`;

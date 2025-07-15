@@ -3,7 +3,7 @@ import { getAllUsers, getAllOrders, getAllGallery } from '../api';
 // Add approve/reject API calls
 import { approveOrder, rejectOrder } from '../api';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const API_URL = process.env.REACT_APP_API_URL || (window.location.origin + '/api');
 
 const AdminDashboard = () => {
   const [tab, setTab] = useState('orders');
