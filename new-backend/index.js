@@ -50,13 +50,11 @@ app.use((err, req, res, next) => {
 });
 
 // 404 handler
-// Remove the old 404 handler and add a catch-all for React Router
-app.get('*', (req, res) => {
-  // If the request starts with /api or /uploads, return 404 JSON
+// Use app.use for the catch-all route to handle all HTTP methods
+app.use((req, res) => {
   if (req.path.startsWith('/api') || req.path.startsWith('/uploads')) {
     return res.status(404).json({ message: 'Route not found' });
   }
-  // Otherwise, serve React index.html
   res.sendFile(path.join(__dirname, '../build', 'index.html'));
 });
 
