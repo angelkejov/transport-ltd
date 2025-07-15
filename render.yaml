@@ -22,4 +22,3 @@ databases:
     databaseName: transport_ltd
     user: transport_ltd_user
     ipAllowList: [] # (optional, for extra security)
-    type: mysql
