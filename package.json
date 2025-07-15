@@ -10,6 +10,7 @@
     "axios": "^1.10.0",
     "http-proxy-middleware": "^3.0.5",
     "jwt-decode": "^4.0.0",
+    "multer": "^2.0.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.3",
@@ -20,7 +21,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "netlify deploy --prod --dir=build"
   },
   "eslintConfig": {
     "extends": [

@@ -12,6 +12,7 @@ import GuestHome from './pages/GuestHome';
 import VerifyEmail from './pages/VerifyEmail';
 import PrivateRoute from './components/PrivateRoute';
 import AdminRoute from './components/AdminRoute.jsx';
+import RateApp from './pages/RateApp';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -52,7 +53,8 @@ function App() {
           <Route path="/auth" element={<Auth />} />
           <Route path="/about" element={<About />} />
           <Route path="/gallery" element={<Gallery />} />
-          <Route path="/verify" element={<VerifyEmail />} />
+          <Route path="/verify-email" element={<VerifyEmail />} />
+          <Route path="/rate" element={<RateApp />} />
 
           {/* Protected Routes */}
           <Route

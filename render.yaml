@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: transport-ltd-app
+    env: node
+    plan: free
+    buildCommand: |
+      cd .. && npm install && npm run build
+      cd new-backend && npm install
+    startCommand: node index.js
+    envVars:
+      - key: MYSQL_URL
+        fromDatabase:
+          name: transport-ltd-db
+          property: connectionString
+    rootDir: new-backend
+    autoDeploy: true
+    
+databases:
+  - name: transport-ltd-db
+    plan: free
+    region: oregon
+    databaseName: transport_ltd
+    user: transport_ltd_user 

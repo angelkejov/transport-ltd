@@ -1,26 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import API from '../api';
+import { getProfile, getOrderHistory } from '../api';
+import { Link } from 'react-router-dom';
 
 const Profile = () => {
   const [profile, setProfile] = useState(null);
+  const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchProfile = async () => {
+    const fetchData = async () => {
       try {
-        const res = await API.get('/users/profile', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('jwt')}`
-          }
-        });
-        setProfile(res.data);
+        const user = await getProfile();
+        setProfile(user);
+        const orderList = await getOrderHistory();
+        setOrders(orderList);
       } catch (err) {
         setProfile(null);
       } finally {
         setLoading(false);
       }
     };
-    fetchProfile();
+    fetchData();
   }, []);
 
   if (loading) return <p>Зареждане...</p>;
@@ -28,31 +28,34 @@ const Profile = () => {
 
   return (
     <div style={{ padding: '2rem', maxWidth: 600, margin: '2rem auto', background: '#f9f0ff', borderRadius: 12 }}>
+      <div style={{ display: 'flex', justifyContent: 'center', margin: '2rem 0 1.5rem 0' }}>
+        <Link to="/rate" style={{
+          background: '#ffd600',
+          color: '#222',
+          padding: '0.75rem 2rem',
+          borderRadius: 8,
+          fontWeight: 'bold',
+          fontSize: 18,
+          textDecoration: 'none',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.07)',
+          border: 'none',
+          transition: 'background 0.2s',
+          display: 'inline-block'
+        }}>
+          Оцени ни ★
+        </Link>
+      </div>
       <h2 style={{ color: '#43a047' }}>Моят профил</h2>
       <p><strong>Име:</strong> {profile.name}</p>
       <p><strong>Имейл:</strong> {profile.email}</p>
 
       <h3 style={{ marginTop: '1.5rem' }}>История на поръчките</h3>
-      {profile.orders && profile.orders.length > 0 ? (
-        profile.orders.map((order, index) => (
+      {orders && orders.length > 0 ? (
+        orders.map((order, index) => (
           <div key={order.id || index} style={{ background: '#fff', padding: '1rem', borderRadius: 8, margin: '0.5rem 0', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
-            <p><strong>Услуга:</strong> {order.serviceName}</p>
-            <p><strong>Дата:</strong> {new Date(order.date).toLocaleDateString('bg-BG')}</p>
-            <p><strong>Статус:</strong> 
-              <span style={{ 
-                color: order.status === 'PENDING' ? '#ff9800' : 
-                       order.status === 'APPROVED' ? '#4caf50' : 
-                       order.status === 'REJECTED' ? '#f44336' : 
-                       order.status === 'COMPLETED' ? '#2196f3' : '#666',
-                fontWeight: 'bold',
-                marginLeft: '0.5rem'
-              }}>
-                {order.status === 'PENDING' ? 'Чакаща' :
-                 order.status === 'APPROVED' ? 'Одобрена' :
-                 order.status === 'REJECTED' ? 'Отхвърлена' :
-                 order.status === 'COMPLETED' ? 'Завършена' : order.status}
-              </span>
-            </p>
+            <p><strong>Услуга:</strong> {order.service}</p>
+            <p><strong>Дата:</strong> {order.createdAt ? new Date(order.createdAt).toLocaleDateString('bg-BG') : ''}</p>
+            <p><strong>Детайли:</strong> {order.details}</p>
           </div>
         ))
       ) : (

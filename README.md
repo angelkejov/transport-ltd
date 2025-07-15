@@ -68,3 +68,10 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+## Deployment (Netlify)
+
+1. Set `REACT_APP_BACKEND_URL` in Netlify environment variables to your Render backend URL (e.g., `https://your-backend.onrender.com`).
+2. If using a monorepo, set the build directory to `new-frontend` in Netlify settings.
+3. Use the build command: `npm run build`.
+4. Deploy using Netlify UI or CLI (`npm run deploy`).

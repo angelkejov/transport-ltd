@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import API from '../api';
+import { placeOrder } from '../api';
 
 const services = [
   'Извозване на строителни отпадъци и ненужни вещи',
@@ -15,45 +15,28 @@ const services = [
 
 const Dashboard = () => {
   const [selected, setSelected] = useState(null);
-  const [address, setAddress] = useState('');
-  const [date, setDate] = useState('');
+  const [details, setDetails] = useState('');
   const [submitted, setSubmitted] = useState(false);
-  const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [phone, setPhone] = useState('');
 
   const handleOrder = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
-    
     try {
-      const token = localStorage.getItem('jwt');
-      if (!token) {
-        setError('Не сте влезли в профила си.');
-        setLoading(false);
-        return;
+      const res = await placeOrder({ service: selected, details, phone });
+      if (res.orderId) {
+        setSubmitted(true);
+        setSelected(null);
+        setDetails('');
+        setPhone('');
+      } else {
+        setError(res.message || 'Грешка при създаване на поръчката.');
       }
-
-      const orderData = {
-        serviceName: selected,
-        date: date,
-        phoneNumber: phone
-      };
-
-      await API.post('/orders/create', orderData, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-
-      setSubmitted(true);
-      setSelected(null);
-      setAddress('');
-      setDate('');
-      setPhone('');
     } catch (err) {
-      setError(err.response?.data || 'Грешка при създаване на поръчката.');
+      setError(err.message || 'Грешка при създаване на поръчката.');
     } finally {
       setLoading(false);
     }
@@ -86,29 +69,19 @@ const Dashboard = () => {
       {selected && !submitted && (
         <form onSubmit={handleOrder} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', background: '#fff', padding: '2rem', borderRadius: 12, boxShadow: '0 2px 12px rgba(0,0,0,0.07)' }}>
           <h3 style={{ color: '#388e3c' }}>{selected}</h3>
-          <input
-            type="text"
-            placeholder="Адрес за изпълнение"
-            value={address}
-            onChange={e => setAddress(e.target.value)}
-            required
-            style={{ padding: '0.75rem', borderRadius: 6, border: '1px solid #ccc' }}
+          <textarea
+            placeholder="Допълнителни детайли (по избор)"
+            value={details}
+            onChange={e => setDetails(e.target.value)}
+            style={{ padding: '0.75rem', borderRadius: 6, border: '1px solid #ccc', minHeight: 60 }}
           />
           <input
             type="tel"
-            placeholder="Телефон за връзка"
+            placeholder="Телефонен номер"
             value={phone}
             onChange={e => setPhone(e.target.value)}
-            required
-            pattern="[0-9]{10}"
             style={{ padding: '0.75rem', borderRadius: 6, border: '1px solid #ccc' }}
-          />
-          <input
-            type="date"
-            value={date}
-            onChange={e => setDate(e.target.value)}
             required
-            style={{ padding: '0.75rem', borderRadius: 6, border: '1px solid #ccc' }}
           />
           <button 
             type="submit" 
