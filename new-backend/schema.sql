@@ -1,40 +1,39 @@
 -- USERS TABLE
 CREATE TABLE IF NOT EXISTS users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    isAdmin BOOLEAN DEFAULT 0,
-    isVerified BOOLEAN DEFAULT 0,
+    isAdmin BOOLEAN DEFAULT FALSE,
+    isVerified BOOLEAN DEFAULT FALSE,
     verificationToken VARCHAR(255),
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- ORDERS TABLE
 CREATE TABLE IF NOT EXISTS orders (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    userId INT NOT NULL,
+    id SERIAL PRIMARY KEY,
+    userId INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     service VARCHAR(255) NOT NULL,
     details TEXT,
     phone VARCHAR(32),
-    status ENUM('pending','approved','rejected') DEFAULT 'pending',
-    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
+    status VARCHAR(16) DEFAULT 'pending' CHECK (status IN ('pending','approved','rejected')),
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- GALLERY TABLE
 CREATE TABLE IF NOT EXISTS gallery (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     url VARCHAR(500) NOT NULL,
     title VARCHAR(255) NOT NULL,
-    mediaType ENUM('image', 'video') DEFAULT 'image',
+    mediaType VARCHAR(16) DEFAULT 'image' CHECK (mediaType IN ('image', 'video')),
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- RATINGS TABLE
 CREATE TABLE IF NOT EXISTS ratings (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    stars INT NOT NULL CHECK (stars BETWEEN 1 AND 5),
+    id SERIAL PRIMARY KEY,
+    stars INTEGER NOT NULL CHECK (stars BETWEEN 1 AND 5),
     description TEXT,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ); 

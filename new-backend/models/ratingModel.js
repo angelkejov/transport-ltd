@@ -1,21 +1,21 @@
 const pool = require('../config/db');
 
 async function addRating({ stars, description }) {
-  const [result] = await pool.execute(
-    'INSERT INTO ratings (stars, description) VALUES (?, ?)',
+  const result = await pool.query(
+    'INSERT INTO ratings (stars, description) VALUES ($1, $2) RETURNING id',
     [stars, description]
   );
-  return result.insertId;
+  return result.rows[0].id;
 }
 
 async function getAllRatings() {
-  const [rows] = await pool.execute('SELECT * FROM ratings ORDER BY createdAt DESC');
-  return rows;
+  const result = await pool.query('SELECT * FROM ratings ORDER BY createdAt DESC');
+  return result.rows;
 }
 
 async function getAverageRating() {
-  const [rows] = await pool.execute('SELECT AVG(stars) as avg FROM ratings');
-  return rows[0]?.avg || 0;
+  const result = await pool.query('SELECT AVG(stars) as avg FROM ratings');
+  return result.rows[0]?.avg || 0;
 }
 
 module.exports = {

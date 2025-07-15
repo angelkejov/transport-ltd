@@ -1,35 +1,35 @@
 const pool = require('../config/db');
 
 async function getOrdersByUserId(userId) {
-  const [rows] = await pool.execute('SELECT * FROM orders WHERE userId = ?', [userId]);
-  return rows;
+  const result = await pool.query('SELECT * FROM orders WHERE userId = $1', [userId]);
+  return result.rows;
 }
 
 async function getAllOrders() {
-  const [rows] = await pool.execute('SELECT * FROM orders');
-  return rows;
+  const result = await pool.query('SELECT * FROM orders');
+  return result.rows;
 }
 
 async function getAllOrdersWithUser() {
-  const [rows] = await pool.execute(`
+  const result = await pool.query(`
     SELECT o.*, u.name as userName, u.email as userEmail
     FROM orders o
     JOIN users u ON o.userId = u.id
     ORDER BY o.createdAt DESC
   `);
-  return rows;
+  return result.rows;
 }
 
 async function createOrder({ userId, service, details, phone }) {
-  const [result] = await pool.execute('INSERT INTO orders (userId, service, details, phone, status) VALUES (?, ?, ?, ?, ?)', [userId, service, details, phone, 'pending']);
-  return result.insertId;
+  const result = await pool.query('INSERT INTO orders (userId, service, details, phone, status) VALUES ($1, $2, $3, $4, $5) RETURNING id', [userId, service, details, phone, 'pending']);
+  return result.rows[0].id;
 }
 
 async function updateOrderStatus(orderId, status) {
   try {
-    const [result] = await pool.execute('UPDATE orders SET status = ? WHERE id = ?', [status, orderId]);
-    console.log(`Updated order ${orderId} to status ${status}, affected rows: ${result.affectedRows}`);
-    return result.affectedRows > 0;
+    const result = await pool.query('UPDATE orders SET status = $1 WHERE id = $2', [status, orderId]);
+    console.log(`Updated order ${orderId} to status ${status}, affected rows: ${result.rowCount}`);
+    return result.rowCount > 0;
   } catch (error) {
     console.error('Database error in updateOrderStatus:', error);
     throw error;
