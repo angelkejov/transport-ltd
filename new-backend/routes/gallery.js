@@ -5,9 +5,6 @@ const { getGallery, addImage, uploadFiles, deleteImage } = require('../controlle
 const upload = require('../utils/uploadMiddleware');
 const path = require('path');
 
-// Serve static files from uploads directory
-router.use('/uploads', express.static(path.join(__dirname, '../uploads')));
-
 // Public routes
 router.get('/', getGallery);
 
