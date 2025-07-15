@@ -21,4 +21,8 @@ databases:
     region: oregon
     databaseName: transport_ltd
     user: transport_ltd_user
+<<<<<<< HEAD
     ipAllowList: [] # (optional, for extra security)
+=======
+    ipAllowList: [] # (optional, for extra security)
+>>>>>>> 65a7edb5fc93e584ae8f8ca168ab7e911d301e6a
